@@ -31,43 +31,54 @@ def creer_tableau(numero_automate):
     return tableau
 
 
-"""Cette fonction va permettre d'afficher un automate grace à la fonction prédefinnie tabulate qui permet de 
-transformer une matrice en un tableau dans la console , on va aller remplir cette matrice par rapport à notre automate
+"""Cette fonction va permettre de transformer notre automate en tableau on va aller remplir cette matrice par rapport à notre automate
 """
-def affichage_automate_tableau(automate):
 
-    tab=[["X" for i in range(automate.longueur_alphabet+2)]for j in range(automate.nombre_etats+1)] #On prédéfinit notre matrice
-    alphabet=[]
+def automatetableau(automate):
+    tab = [["X" for i in range(automate.longueur_alphabet + 2)] for j in
+           range(automate.nombre_etats + 1)]  # On prédéfinit notre matrice
+    alphabet = []
 
-    for i in range(automate.nombre_transitions):                            #On crée le tableau qui va présenter notre alphabet
+    for i in range(automate.nombre_transitions):  # On crée le tableau qui va présenter notre alphabet
         if automate.transitions[i][1] not in alphabet:
             alphabet.append(automate.transitions[i][1])
-    tab[0][0]=""
-    tab[0][1]="E/A"
-    for k in range(automate.longueur_alphabet) :                            #On utilise ce tableau pour crée la première ligne avec les lettres
-        tab[0][k+2]=alphabet[k]
+    tab[0][0] = ""
+    tab[0][1] = "E/A"
+    for k in range(automate.longueur_alphabet):  # On utilise ce tableau pour crée la première ligne avec les lettres
+        tab[0][k + 2] = alphabet[k]
 
-
-    for l in range(automate.nombre_etats) :                                 #On regarde si les états sont des entrées ou sorties afin de le préciser
+    for l in range(automate.nombre_etats):  # On regarde si les états sont des entrées ou sorties afin de le préciser
         tab[l + 1][0] = ""
         if l in automate.etats_initiaux:
-            tab[l + 1][0]="E"
+            tab[l + 1][0] = "E"
         else:
             if l in automate.etats_finaux:
-                tab[l + 1][0]+="S"
+                tab[l + 1][0] += "S"
 
-        tab[l+1][1]=l   #La prémière colonne présentera les états
+        tab[l + 1][1] = l  # La prémière colonne présentera les états
         for i in range(automate.nombre_transitions):
 
-            if automate.transitions[i][0]==str(l):                          #Pour chaque état on va regarder les transitions qui les concernent
+            if automate.transitions[i][0] == str(
+                    l):  # Pour chaque état on va regarder les transitions qui les concernent
 
                 for j in range(len(alphabet)):
-                    if automate.transitions[i][1]==alphabet[j]:             #On regarde ensuite quel lettre cette transition concerne
-                        if tab[l+1][j+2]=="X":                              #Enfin on regarde si il y'a déja une transition à cet emplacement , si c'est pas le cas , on remplace de X , sinon , on ajoute la noubelle transition
-                            tab[l+1][j+2]=automate.transitions[i][2]
+                    if automate.transitions[i][1] == alphabet[
+                        j]:  # On regarde ensuite quel lettre cette transition concerne
+                        if tab[l + 1][
+                            j + 2] == "X":  # Enfin on regarde si il y'a déja une transition à cet emplacement , si c'est pas le cas , on remplace de X , sinon , on ajoute la noubelle transition
+                            tab[l + 1][j + 2] = automate.transitions[i][2]
                         else:
-                            tab[l+1][j+2]=tab[l+1][j+2]+","+automate.transitions[i][2]
+                            tab[l + 1][j + 2] = tab[l + 1][j + 2] + "," + automate.transitions[i][2]
                     continue
+
+    return tab
+
+"""Cette fonction va permettre d'afficher un automate grace à la fonction prédefinnie tabulate qui permet de 
+transformer une matrice en un tableau dans la console 
+"""
+def affichage_automate_tableau(automate):
+    tab=automatetableau(automate)
+
     print(tabulate(tab, headers="firstrow", tablefmt="grid"))
 
 
