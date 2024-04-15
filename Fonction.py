@@ -87,4 +87,67 @@ def affichage_automate_tableau(automate):
 
 
 
+def minimisation(automate):
+    tab_automate=automatetableau(automate)
+    tab_sortie=tab_automate
+    for i in range(1,len(tab_automate)):
+        for j in range(1,len(tab_automate[i])):
+            if int(tab_sortie[i][j]) in automate.etats_finaux:
+                tab_sortie[i][j]="S"
+            else :
+                tab_sortie[i][j]="N"
+
+    dico={}
+
+    for i in range(1,len(tab_automate)):
+        tab=tab_sortie[i][1:]
+        if tab not in dico.values():
+
+            dico[i-1]=tab
+        else:
+            for cle, valeur in dico.items():
+                if valeur == tab:
+                    if isinstance(cle, tuple):
+                        nouvelle_clef = (*cle, i-1)
+                    else:
+                        nouvelle_clef=(cle,i-1)
+                    del dico[cle]
+                    dico[nouvelle_clef]=valeur
+                    break
+
+    dico_transforme={}
+    lettre = ord('A')  # Utilisation de la fonction ord() pour obtenir le code ASCII de la lettre 'A'
+
+    for cle in dico:
+        # Convertir le code ASCII en caractère
+        nouvelle_clef = chr(lettre)
+        dico_transforme[nouvelle_clef] = cle
+        lettre += 1  # Passer à la lettre suivante dans l'alphabet
+    print(dico_transforme)
+
+    lettres=["A","B","C","D","E"]
+    compteur=0
+    print(dico_transforme)
+    tableau = [0] * (automate.nombre_etats)
+
+    # Remplir le tableau avec les valeurs du dictionnaire transformé
+    for indice, lettre in enumerate(tableau):
+        for cle, valeur in dico_transforme.items():
+            if isinstance(valeur, tuple):
+                if indice in valeur:
+                    tableau[indice] = cle+str(compteur)
+                    break
+            elif valeur == indice:
+                tableau[indice] = cle
+                break
+        compteur+=1
+    print(tableau)
+    nouveau_tab=automatetableau(automate)
+    for i in range(1,len(tab_automate)):
+        for j in range(1,len(tab_automate[i])):
+            nouveau_tab[i][j]=tableau[int(nouveau_tab[i][j])]
+
+    print(nouveau_tab)
+
+    print(tabulate(nouveau_tab, headers="firstrow", tablefmt="grid"))
 
