@@ -42,19 +42,20 @@ def affichage_automate_tableau(automate):
     for i in range(automate.nombre_transitions):                            #On crée le tableau qui va présenter notre alphabet
         if automate.transitions[i][1] not in alphabet:
             alphabet.append(automate.transitions[i][1])
-    tab[0][0]=" "
+    tab[0][0]=""
     tab[0][1]="E/A"
     for k in range(automate.longueur_alphabet) :                            #On utilise ce tableau pour crée la première ligne avec les lettres
         tab[0][k+2]=alphabet[k]
 
-    for l in range(automate.nombre_etats) :
+
+    for l in range(automate.nombre_etats) :                                 #On regarde si les états sont des entrées ou sorties afin de le préciser
+        tab[l + 1][0] = ""
         if l in automate.etats_initiaux:
             tab[l + 1][0]="E"
         else:
             if l in automate.etats_finaux:
-                tab[l + 1][0]="S"
-            else :
-                tab[l + 1][0] = " "
+                tab[l + 1][0]+="S"
+
         tab[l+1][1]=l   #La prémière colonne présentera les états
         for i in range(automate.nombre_transitions):
 
