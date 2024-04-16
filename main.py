@@ -1,7 +1,8 @@
 from Fonction import *
-from Automate import *
-tab_automate1=creer_tableau(1)
 
-automate1 = Automate(tab_automate1)
-print(automate1.transitions)
+
+
+automate1 = creer_automate(2)
+affichage_automate_tableau(automate1)
+automate1=minimisation(automate1)
 affichage_automate_tableau(automate1)
