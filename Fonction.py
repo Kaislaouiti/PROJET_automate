@@ -80,7 +80,19 @@ def affichage_automate_tableau(automate):
     tab=automatetableau(automate)
     print(tabulate(tab, headers="firstrow", tablefmt="grid"))
 
+def is_standard(automate):  # Cette méthode vérifie si l'automate est "standard" ou non
 
+    tableau =automatetableau(automate)
+    if automate.nombre_etats_initiaux != 1:  # verifie s'il n'y qune seul entrée
+        return False  # Alors, cela n'est pas standard, donc on retourne False
+    else:  # Sinon
+        etats_initial = automate.etats_initiaux[0]  # On assigne a "etats_initiaux" la valeur de l'entrée
+        etats_initial = str(etats_initial)
+        for i in range(1,len(tableau)):  #on parcours le tableau a partir de la 2eme ligne jusqua la fin
+            for j in range (2,len(tableau[i])): #on parcours le tableau a partir de la 3eme col jusqua la fin
+                if tableau[i][j] == etats_initial  or etats_initial in tableau[i][j]:  #On verifie si il y a un etat qui rentre dans l'etat initiale
+                    return False  # si c'est le cas, cela n'est pas standard, donc on retourne False
+    return True  # Si aucune des conditions ci-dessus n'est satisfaite, alors cela est standard, donc on retourne True
 """Cette fonction va prendre en parametre un automate , le minimiser un automate et de le renvoyer."""
 def minimisation(automate):
 
