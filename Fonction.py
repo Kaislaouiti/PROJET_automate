@@ -311,3 +311,25 @@ def standardiser(automate):
 
     tab_automate.append(new_transi)                                      # On rajoute le nouvel état entrée
     return tab_en_automate(tab_automate)
+
+"""Fonction pour vérifier si un automate est complet """
+def isComplet(automate):
+    tableau = automatetableau(automate)
+    for i in range(1, len(tableau)):
+        for j in range(2, len(tableau[i])):
+            if tableau[i][j] == 'X':  # On verifie si ya un X dans une case
+                return False
+    return True
+
+"""Fonction pour vérifier si un automate est déterministe """
+
+def isDeterministe(automate):
+    tableau = automatetableau(automate)
+    if automate.nombre_etats_initiaux != 1:
+        return False
+    else:
+        for i in range(1, len(tableau)):
+            for j in range(2, len(tableau[i])):
+                if "," in tableau[i][j]:  # On verifie si plusieurs états sont dans une case
+                    return False
+    return True
