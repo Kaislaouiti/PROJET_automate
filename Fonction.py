@@ -128,7 +128,6 @@ def completer(automate):
         for j in range(2, len(tableau[i])):
             if tableau[i][j]=="X":
                 tableau[i][j]=str(automate.nombre_etats+1)
-    print(tableau)
 
     return tab_en_automate(tableau)
 
