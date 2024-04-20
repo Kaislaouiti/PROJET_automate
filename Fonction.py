@@ -277,4 +277,37 @@ def reconaissance_mot(automate,mot):
     else :
         return False
 
+"""Cette fonction permet de standardiser un automate (même s'il est déjà standardisé). Elle prend en entré une instance de la classe automate et renvoie une instance de cette même classe """
 
+def standardiser(automate):
+    tab_automate = automatetableau(automate)
+    new_transi = ['' for i in range(automate.longueur_alphabet + 2)]        # On créer le tableau qui représentera notre nouvel état puisqu'on part du principe que l'automate n'est pas déjà standardisé
+    new_transi[0] = 'E'
+    new_transi[1] = len(tab_automate)-1
+    new_trans_etat = []
+    nombre_actuel = ''
+
+    for j in range(2,automate.longueur_alphabet+2):     # On parcourt d'abord en ligne et ensuite en colonne
+        for i in range(1,len(tab_automate)):
+            if (tab_automate[i][1] in automate.etats_initiaux):
+                tab_automate[i][0] = ''                                  # On enlève l'etiquette entrée aux anciens états entrées
+                if (tab_automate[i][1] in automate.etats_finaux):
+                    new_transi[0] = 'ES'                                # On regarde si une ancienne entrée n'étais pas aussi une sortie
+                for caractere in tab_automate[i][j]:
+                    if caractere.isdigit():                              # On regarde les nombres au cas ou il y a plusieurs état dans une chaine de transition
+                        nombre_actuel += caractere
+                    else:
+                        if (nombre_actuel not in new_trans_etat) and nombre_actuel != '':
+                            new_trans_etat.append(nombre_actuel)         # On met chaque nombre reconnue dans une liste en vérifiant qu'il y est pas déjà et on recommence pour chaque ligne
+                        nombre_actuel = ''
+                if nombre_actuel :
+                    if (nombre_actuel not in new_trans_etat):
+                        new_trans_etat.append(nombre_actuel)
+                    nombre_actuel = ''
+        if new_trans_etat == ['']:
+            new_trans_etat = ['X']
+        new_transi[j] = ','.join(new_trans_etat)                         # On retranscrit la liste de nombre recolté dans notre nouvel état  et on recommence pour chaque colonne
+        new_trans_etat = []
+
+    tab_automate.append(new_transi)                                      # On rajoute le nouvel état entrée
+    return tab_en_automate(tab_automate)
