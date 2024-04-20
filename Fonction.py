@@ -57,19 +57,38 @@ def automatetableau(automate):
                 tab[l + 1][0] += "S"
 
         tab[l + 1][1] = l  # La prémière colonne présentera les états
-        for i in range(automate.nombre_transitions):
 
-            if automate.transitions[i][0] == str(
+
+        for i in range(automate.nombre_transitions):        #On teste la longueur de la chaine de transition pour adapter selon la longueur du nombre dans les etats
+
+            if len(automate.transitions[i])==3:
+                transition1=automate.transitions[i][0]
+                caractere=automate.transitions[i][1]
+                transition2 = automate.transitions[i][2]
+            elif len(automate.transitions[i])==4:
+                if 'a' <=automate.transitions[i][1]<= 'z' :
+                    transition1 = automate.transitions[i][0]
+                    caractere = automate.transitions[i][1]
+                    transition2 = automate.transitions[i][2:]
+                else :
+                    transition1 = automate.transitions[i][:2]
+                    caractere = automate.transitions[i][2]
+                    transition2 = automate.transitions[i][3]
+            elif len(automate.transitions[i])==5:
+                transition1 = automate.transitions[i][:2]
+                caractere = automate.transitions[i][2]
+                transition2 = automate.transitions[i][3:]
+            if transition1 == str(
                     l):  # Pour chaque état on va regarder les transitions qui les concernent
 
                 for j in range(len(alphabet)):
-                    if automate.transitions[i][1] == alphabet[
+                    if caractere == alphabet[
                         j]:  # On regarde ensuite quel lettre cette transition concerne
                         if tab[l + 1][
                             j + 2] == "X":  # Enfin on regarde si il y'a déja une transition à cet emplacement , si c'est pas le cas , on remplace de X , sinon , on ajoute la noubelle transition
-                            tab[l + 1][j + 2] = automate.transitions[i][2]
+                            tab[l + 1][j + 2] = transition2
                         else:
-                            tab[l + 1][j + 2] = tab[l + 1][j + 2] + "," + automate.transitions[i][2]
+                            tab[l + 1][j + 2] = tab[l + 1][j + 2] + "," + transition2
                     continue
     return tab
 
