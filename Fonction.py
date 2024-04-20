@@ -113,6 +113,26 @@ def is_standard(automate):  # Cette méthode vérifie si l'automate est "standar
                     return False  # si c'est le cas, cela n'est pas standard, donc on retourne False
     return True  # Si aucune des conditions ci-dessus n'est satisfaite, alors cela est standard, donc on retourne True
 """Cette fonction va prendre en parametre un automate , le minimiser un automate et de le renvoyer."""
+
+def completer(automate):
+
+    tableau = automatetableau(automate)
+    tableau.append([])
+    tableau[-1].append("")
+    tableau[-1].append(str(automate.nombre_etats+1))
+
+    for i in range(1, len(tableau[0])-1):
+        tableau[-1].append(str(automate.nombre_etats+1))
+
+    for i in range(1, len(tableau)):  # on parcours le tableau a partir de la 2eme ligne jusqua la fin
+        for j in range(2, len(tableau[i])):
+            if tableau[i][j]=="X":
+                tableau[i][j]=str(automate.nombre_etats+1)
+    print(tableau)
+
+    return tab_en_automate(tableau)
+
+
 def minimisation(automate):
 
     tab_automate=automatetableau(automate)
