@@ -241,3 +241,21 @@ def tab_en_automate(tab_automate):
     return automate
 
 
+
+def reconaissance_mot(automate,mot):
+    tab_automate=automatetableau(automate)
+    pointeur=str(automate.etats_initiaux[0])
+    for lettre in mot:
+        if ord(lettre)-97>=automate.longueur_alphabet:
+            print("lettre inconnu")
+            return False
+        i=ord(lettre)-97+2
+        pointeur=tab_automate[int(pointeur)+1][i]
+        if pointeur=="X":
+            return False
+    if tab_automate[int(pointeur)+1][0]=="S" or tab_automate[int(pointeur)+1][0]=="ES":
+        return True
+    else :
+        return False
+
+
