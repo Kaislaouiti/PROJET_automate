@@ -38,14 +38,14 @@ while(1):
                 tableau_choix.append("Completer l'automate")
                 nombre_choix += 1
 
-        tableau_choix=tableau_choix+["Donner l'automate complementaire","Minimiser l'automate","Tester si l'automate reconnait un certain mot","Choisir un nouvel automate"]
+        tableau_choix=tableau_choix+["Donner l'automate complementaire","Minimiser l'automate","Tester si l'automate reconnait un certain mot","Choisir un nouvel automate","Tracer automate fichier"]
         print("choisissez une option")
         for i in range(len(tableau_choix)):
             print(i+1,tableau_choix[i])
         while(choix<1 or choix>nombre_choix):
             choix=int(input("Votre choix :"))
         choix=tableau_choix[choix-1]
-        if choix in tableau_choix[:-2]:
+        if choix in tableau_choix[:-3]:
             if choix == "Standardiser l'automate":
                 print("Voici l'automate standardisé : ")
                 automate_nouveau = standardiser(automate)
@@ -79,6 +79,8 @@ while(1):
         else:
             if choix=="Tester si l'automate reconnait un certain mot" :
                 continuer=1
+            if choix=="Tracer automate fichier":
+                trace_automate(automate,numero_automate)
                 while (continuer):
                     mot=input("Donnez un mot :")
                     if reconaissance_mot(automate,mot):
