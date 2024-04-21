@@ -333,3 +333,15 @@ def isDeterministe(automate):
                 if "," in tableau[i][j]:  # On verifie si plusieurs états sont dans une case
                     return False
     return True
+
+def automate_complementaire(automate):   # En suivant le modèle des autres fonctions , on inverse simplement les etats sorties et les non sorties
+    tableau = automatetableau(automate)
+    for i in range(1, len(tableau)):
+        if tableau[i][0]=="S":
+            tableau[i][0]=""
+        if tableau[i][0]=="ES":
+            tableau[i][0]=="E"
+        if tableau[i][0]=="":
+            tableau[i][0]="S"
+        if tableau[i][0]=="E":
+            tableau[i][0]=="ES"
