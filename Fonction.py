@@ -6,7 +6,7 @@ from Automate import *
 def creer_automate(numero_automate):
 
     # On importe les lignes du fichiers
-    with open("test_automate"+str(numero_automate)+".txt","r") as f:
+    with open("B4-"+str(numero_automate)+".txt","r") as f:
         contenu=f.readlines()
 
     # Premier élément: nombre de symboles de l'alphabet
@@ -80,12 +80,9 @@ def automatetableau(automate):
                 transition2 = automate.transitions[i][3:]
             if transition1 == str(
                     l):  # Pour chaque état on va regarder les transitions qui les concernent
-
                 for j in range(len(alphabet)):
-                    if caractere == alphabet[
-                        j]:  # On regarde ensuite quel lettre cette transition concerne
-                        if tab[l + 1][
-                            j + 2] == "X":  # Enfin on regarde si il y'a déja une transition à cet emplacement , si c'est pas le cas , on remplace de X , sinon , on ajoute la noubelle transition
+                    if caractere == alphabet[j]:  # On regarde ensuite quel lettre cette transition concerne
+                        if tab[l + 1][j + 2] == "X":  # Enfin on regarde si il y'a déja une transition à cet emplacement , si c'est pas le cas , on remplace de X , sinon , on ajoute la noubelle transition
                             tab[l + 1][j + 2] = transition2
                         else:
                             tab[l + 1][j + 2] = tab[l + 1][j + 2] + "," + transition2
@@ -323,7 +320,11 @@ def determinisation(automate):
 
     return  tab_en_automate(dernier_tableau)
 def minimisation(automate):
+    if isDeterministe(automate)==False:
+        automate=determinisation(automate)
 
+    if isComplet(automate)==False:
+        automate=completer(automate)
     tab_automate=automatetableau(automate)
     tab_sortie=tab_automate
     for i in range(1,len(tab_automate)):                    #Première étape , on transforme notre automate en tableau et on crée un nouveau tableau avec des S pour les sorties et des N pour les non sorties
