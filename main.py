@@ -1,4 +1,9 @@
 from Fonction import *
+
+automate = creer_automate(2)
+affichage_automate_tableau(automate)
+determiniser_epsilon(automate)
+
 while(1):
     print("---------Bienvenue dans le projet Automate---------")
     print("Choisissez un automate")

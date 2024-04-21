@@ -131,6 +131,115 @@ def completer(automate):
 
     return tab_en_automate(tableau)
 
+def recuperer_transition_epsilone(tableau,etat):
+
+    if tableau[int(etat)+1][-1]=="X":
+        return []
+    else :
+        nombre=tableau[int(etat)+1][-1]
+        if "," not in nombre:
+
+                return [nombre]+recuperer_transition_epsilone(tableau,nombre)
+        else:
+            a=nombre.split(",")
+            return [a[0],a[1]] + recuperer_transition_epsilone(tableau, a[0])+recuperer_transition_epsilone(tableau, a[1])
+
+
+def determiniser_epsilon(automate):
+    tab_automate=automatetableau(automate)
+    dico={}
+    for i in range(automate.nombre_etats):
+        dico[i] = recuperer_transition_epsilone(tab_automate,i)
+    etat_de_base=automate.etats_initiaux[0]
+    pile=[]
+    tab=[]
+    tab.append(tab_automate[0][:-1])
+    tab.append([])
+    tab[1].append("E")
+    tab[1].append(etat_de_base)
+    for keys in dico.keys():
+        dico[keys]=[keys]+dico[keys]
+    for i in range(2, len(tab_automate[i]) - 1):
+        tab[1].append("X")
+    for i in range(2,len(tab_automate[i])-1):
+        for etat in dico[etat_de_base]:
+            if tab_automate[int(etat)+1][i]!="X":
+                if tab[1][i]=="X":
+                    tab[1][i]=tab_automate[int(etat)+1][i]
+                else:
+                    tab[1][i]=tab[1][i]+","+tab_automate[int(etat)+1][i]
+        pile.append(tab[1][i])
+    compteur=2
+    tab3=[etat_de_base]
+    for elemnt in pile:
+        tab3.append(elemnt)
+    while pile!=[]:
+
+        if ',' not in pile[0]:
+            etats=[pile[0]]
+        else :
+            etats=pile[0].split(",")
+
+        tab.append([])
+        tab[compteur].append("")
+        if len(etats)==1:
+            tab[compteur].append(etats[0])
+        else:
+            tab[compteur].append(etats[0]+","+etats[1])
+        for i in range(2, len(tab_automate[i] )- 1):
+            tab[compteur].append("X")
+        for i in range(2, len(tab_automate[i] ) - 1):
+            for etatss in etats :
+                for etat in dico[int(etatss)]:
+
+
+                    if tab_automate[int(etat) + 1][i] != "X":
+
+                        if tab[compteur][i] == "X":
+                            chaine= tab_automate[int(etat) + 1][i]
+
+                        else:
+
+                            if tab_automate[int(etat) + 1][i] not in chaine:
+                                chaine = chaine  + "," + tab_automate[int(etat) + 1][i]
+                            else:
+                                chaine="X"
+
+                        tab[compteur][i] = chaine
+
+                        if chaine not in tab3 and chaine!="X" and etatss==etats[-1]:
+
+                            pile.append(tab[compteur][i])
+                            tab3.append(tab[compteur][i])
+        compteur+=1
+
+        pile.pop(0)
+
+        for i in range(1,len(tab_automate)):
+            if tab_automate[i][0]=="S":
+                for k in range(1, len(tab_automate)):
+                    if str(tab_automate[i][1]) in tab_automate[k][-1]:
+                        for j in range(1,len(tab)):
+                            if str(k-1) in str(tab[j][1]):
+                                if tab[j][0]=="E":
+                                    tab[j][0]="ES"
+                                else:
+                                    tab[j][0]="S"
+
+
+        print(tab)
+        for i in range(1,len(tab)):
+            for j in range(1,len(tab[i])):
+                for k in range(len(tab3)):
+                    if tab[i][j]==tab3[k]:
+                        tab[i][j]=k
+    affichage_automate_tableau(tab_en_automate(tab))
+
+
+
+
+
+
 def determinisation(automate):
     nb_etat_finaux =1
     nb_etat = automate.longueur_alphabet
@@ -329,8 +438,15 @@ def tab_en_automate(tab_automate):
     transition=[0]
     for i in range(1,len(tab_automate)):
         for j in range(2,len(tab_automate[i])):
-            transition[0]+=1
-            transition.append(str(i-1)+tab_automate[0][j]+str(tab_automate[i][j]))
+            if "," not in str(tab_automate[i][j]):
+                transition[0]+=1
+                transition.append(str(i-1)+tab_automate[0][j]+str(tab_automate[i][j]))
+            else :
+                tab=tab_automate[i][j].split(",")
+                for nombre in tab:
+                    transition[0] += 1
+                    transition.append(str(i - 1) + tab_automate[0][j] + nombre)
+
     automate = Automate([taille_alphabet,nombre_etats,etat_entre,etat_sortie,transition])
     return automate
 
