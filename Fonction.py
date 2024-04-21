@@ -131,7 +131,82 @@ def completer(automate):
 
     return tab_en_automate(tableau)
 
+def determinisation(automate):
+    nb_etat_finaux =1
+    nb_etat = automate.longueur_alphabet
+    tab = [[]] #listes qui va contenir les fusions des éléments
+    tab2 = [] #va contenir les transitions sous la forme 1a2
 
+
+    pile =[] #pour gérer quel état on fait -> difficulté pour compter
+    if  automate.nombre_etats_initiaux ==0: return #pas de début -> pas de déterminisation
+    for x in range(automate.nombre_etats_initiaux):
+        tab[0].append(automate.etats_initiaux[x]) #on créer le premier élément, fusions de toutes les entrées
+    compteur = 0
+    for x in range(automate.longueur_alphabet):
+        list = []
+
+        for y in range(len(automate.transitions)):
+
+            if (int(automate.transitions[y][0]) in tab[0]) and ord(automate.transitions[y][1]) == (97+x):
+                if int(automate.transitions[y][2]) not in list:
+                    list.append(int(automate.transitions[y][2]))
+
+        pile.append(list)
+        compteur+=1
+        text = "0"+chr(97+x)+str(compteur)
+        tab2.append(text)
+    compt = 0
+    while len(pile)>0:
+
+        if pile[0] not in tab :
+            for x in range(automate.longueur_alphabet):
+                list=[]
+                for y in range(len(automate.transitions)):
+                    if int(automate.transitions[y][0]) in pile[0] and ord(automate.transitions[y][1]) == (97 + x):
+                        if int(automate.transitions[y][2]) not in list:
+                            list.append(int(automate.transitions[y][2]))
+                if list in pile:
+                    p = pile.index(list)
+                    text = str(len(tab))+chr(97+x)+str(p+len(tab))
+                    tab2.append(text)
+                if list in tab:
+                    p = tab.index(list)
+                    text = str(len(tab)) + chr(97 + x) + str(p)
+                    tab2.append(text)
+                if list not in pile and list not in tab:
+                    pile.append(list)
+                    text = str(len(tab))+chr(97+x)+str(len(pile)+len(tab)-1)
+                    tab2.append(text)
+            tab.append(pile[0])
+        pile.pop(0)
+    #ici on a les états, l'états initial et les transitions.
+    #plus qu'à trouver les états finaux.
+    tab_etat_finaux = []
+    nb_etat = len(tab)-1
+    for x in range(len(automate.etats_finaux)):
+        for y in range(len(tab)):
+            if automate.etats_finaux[x] in tab[y]:
+                tab_etat_finaux.append(tab[y])
+    for x in range(len(tab_etat_finaux)):
+        tab_etat_finaux[x] = tab.index(tab_etat_finaux[x])
+
+    liste0 = [1]+[0]
+    liste1 = [len(tab_etat_finaux)] + tab_etat_finaux
+    tableau = [automate.longueur_alphabet, nb_etat, liste0, liste1,
+               [len(tab2)] + tab2]
+    automate=Automate(tableau)
+    tableau=automatetableau(automate)
+    dernier_tableau=[]
+
+    for i in range(len(tableau)):
+        deja_present=0
+        for j in range(len(dernier_tableau)):
+            if tableau[i][0]==dernier_tableau[j][0] and tableau[i][2:]==dernier_tableau[j][2:]:
+                deja_present=1
+        if deja_present==0: dernier_tableau.append(tableau[i])
+
+    return  tab_en_automate(dernier_tableau)
 def minimisation(automate):
 
     tab_automate=automatetableau(automate)
@@ -339,9 +414,12 @@ def automate_complementaire(automate):   # En suivant le modèle des autres fonc
     for i in range(1, len(tableau)):
         if tableau[i][0]=="S":
             tableau[i][0]=""
-        if tableau[i][0]=="ES":
+        elif tableau[i][0]=="ES":
             tableau[i][0]=="E"
-        if tableau[i][0]=="":
+        elif tableau[i][0]=="":
             tableau[i][0]="S"
-        if tableau[i][0]=="E":
+        elif tableau[i][0]=="E":
             tableau[i][0]=="ES"
+
+    return tab_en_automate(tableau)
+
