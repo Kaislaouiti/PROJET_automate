@@ -423,3 +423,22 @@ def automate_complementaire(automate):   # En suivant le modèle des autres fonc
 
     return tab_en_automate(tableau)
 
+def trace_automate(automate,num_automate):
+    nom_fichier = "Trace_automate_B4-"+str(num_automate)+".txt"
+
+    with open(nom_fichier, 'w') as fichier:
+        fichier.write(str(automate.longueur_alphabet)+"\n")
+        fichier.write(str(automate.nombre_etats)+"\n")
+        fichier.write(str(automate.nombre_etats_initiaux)+" ")
+        for i in automate.etats_initiaux:
+            fichier.write(str(i)+" ")
+        fichier.write("\n"+str(automate.nombre_etats_finaux)+" ")
+        for i in automate.etats_finaux:
+            fichier.write(str(i)+" ")
+        fichier.write("\n"+str(automate.nombre_transitions)+"\n")
+        for i in automate.transitions:
+            fichier.write(i+"\n")
+
+
+
+
