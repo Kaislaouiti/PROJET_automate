@@ -1,8 +1,5 @@
 from Fonction import *
 
-automate = creer_automate(2)
-affichage_automate_tableau(automate)
-determiniser_epsilon(automate)
 
 while(1):
     print("---------Bienvenue dans le projet Automate---------")
@@ -55,6 +52,7 @@ while(1):
 
             elif choix == "Determiniser l'automate":
                 print("Voici l'automate déterminisé : ")
+
                 automate_nouveau = determinisation(automate)
 
             elif choix == "Completer l'automate":
@@ -68,7 +66,7 @@ while(1):
             elif choix == "Minimiser l'automate":
                 print("Voici l'automate minimisé : ")
                 automate_nouveau = minimisation(automate)
-
+            print("Resultat final:")
             affichage_automate_tableau(automate_nouveau)
             print("Voulez vous garder ce nouvel automate pour la suite ? ")
             choix2=-1

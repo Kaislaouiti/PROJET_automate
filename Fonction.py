@@ -52,9 +52,9 @@ def automatetableau(automate):
         tab[l + 1][0] = ""
         if l in automate.etats_initiaux:
             tab[l + 1][0] = "E"
-        else:
-            if l in automate.etats_finaux:
-                tab[l + 1][0] += "S"
+
+        if l in automate.etats_finaux:
+            tab[l + 1][0] += "S"
 
         tab[l + 1][1] = l  # La prémière colonne présentera les états
 
@@ -131,6 +131,9 @@ def completer(automate):
 
     return tab_en_automate(tableau)
 
+"""
+Cette fonction est une fonction recursive qui va nous permettre d'avoir tous les chemins d'epsilon pour un etat 
+"""
 def recuperer_transition_epsilone(tableau,etat):
 
     if tableau[int(etat)+1][-1]=="X":
@@ -144,7 +147,7 @@ def recuperer_transition_epsilone(tableau,etat):
             a=nombre.split(",")
             return [a[0],a[1]] + recuperer_transition_epsilone(tableau, a[0])+recuperer_transition_epsilone(tableau, a[1])
 
-
+"""Cette fonction va nous permettre de determiner un automate avec des epsilon"""
 def determiniser_epsilon(automate):
     tab_automate=automatetableau(automate)
     dico={}
@@ -215,25 +218,25 @@ def determiniser_epsilon(automate):
 
         pile.pop(0)
 
-        for i in range(1,len(tab_automate)):
-            if tab_automate[i][0]=="S":
-                for k in range(1, len(tab_automate)):
-                    if str(tab_automate[i][1]) in tab_automate[k][-1]:
-                        for j in range(1,len(tab)):
-                            if str(k-1) in str(tab[j][1]):
-                                if tab[j][0]=="E":
-                                    tab[j][0]="ES"
-                                else:
-                                    tab[j][0]="S"
+    for i in range(1,len(tab_automate)):
+        if tab_automate[i][0]=="S":
+            for k in range(1, len(tab_automate)):
+                if str(tab_automate[i][1]) in tab_automate[k][-1]:
+                    for j in range(1,len(tab)):
+                        if str(k-1) in str(tab[j][1]):
+                            if tab[j][0]=="E":
+                                tab[j][0]="ES"
+                            else:
+                                tab[j][0]="S"
+    print("Resultat :")
+    print(tabulate(tab, headers="firstrow", tablefmt="grid"))
 
-
-        print(tab)
-        for i in range(1,len(tab)):
-            for j in range(1,len(tab[i])):
-                for k in range(len(tab3)):
-                    if tab[i][j]==tab3[k]:
-                        tab[i][j]=k
-    affichage_automate_tableau(tab_en_automate(tab))
+    for i in range(1,len(tab)):
+        for j in range(1,len(tab[i])):
+            for k in range(len(tab3)):
+                if tab[i][j]==tab3[k]:
+                    tab[i][j]=k
+    return tab_en_automate(tab)
 
 
 
@@ -241,6 +244,9 @@ def determiniser_epsilon(automate):
 
 
 def determinisation(automate):
+    for i in automate.transitions:
+        if "e" in i :
+            return determiniser_epsilon(automate)
     nb_etat_finaux =1
     nb_etat = automate.longueur_alphabet
     tab = [[]] #listes qui va contenir les fusions des éléments
@@ -327,6 +333,9 @@ def minimisation(automate):
             else :
                 tab_sortie[i][j]="N"
 
+    print("Dabord le tableau S/N")
+    print(tabulate(tab_sortie, headers="firstrow", tablefmt="grid"))
+
     dico={}
 
     for i in range(1,len(tab_automate)):                    # Ensuite on va crée un dictionnaire pour regrouper les états ayant la meme ligne avec les s et n
@@ -344,7 +353,7 @@ def minimisation(automate):
                     del dico[cle]
                     dico[nouvelle_clef]=valeur
                     break
-
+    print("Le Dictionnaire qui regroupe les etats :")
     dico_transforme={}
     lettre = ord('A')  # Ensuite on va transformer ce tableau pour avoir les états similaire et les associer à une lettre
 
@@ -353,6 +362,7 @@ def minimisation(automate):
         nouvelle_clef = chr(lettre)
         dico_transforme[nouvelle_clef] = cle
         lettre += 1
+    print(dico_transforme)
 
     lettres=["A","B","C","D","E"]
     compteur=0
@@ -374,6 +384,8 @@ def minimisation(automate):
     for i in range(1,len(tab_automate)):
         for j in range(1,len(tab_automate[i])):
             nouveau_tab[i][j]=tableau[int(nouveau_tab[i][j])]
+    print("Le tableau avec les lettre:")
+    print(tabulate(nouveau_tab, headers="firstrow", tablefmt="grid"))
 
     for i in range(1,len(nouveau_tab)):
         compteur = i+1
@@ -402,6 +414,10 @@ def minimisation(automate):
             compteur+=1
 
         if i==(len(nouveau_tab)-1):break
+
+    print("Le tableau reduit :")
+    print(tabulate(nouveau_tab, headers="firstrow", tablefmt="grid"))
+
     dico={}
     compteur=0
     for i in range(1, len(nouveau_tab)):                #Enfin, pour garder la cohésion du programme , on renomme nos états par des chiffres
