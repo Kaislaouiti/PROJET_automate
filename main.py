@@ -23,7 +23,7 @@ while(1):
         else :
             print("non determiné et non complet")
         tableau_choix=[]
-        nombre_choix=4
+        nombre_choix=5
         choix = 0
 
         if not(is_standard(automate)):
@@ -79,8 +79,7 @@ while(1):
         else:
             if choix=="Tester si l'automate reconnait un certain mot" :
                 continuer=1
-            if choix=="Tracer automate fichier":
-                trace_automate(automate,numero_automate)
+
                 while (continuer):
                     mot=input("Donnez un mot :")
                     if reconaissance_mot(automate,mot):
@@ -91,6 +90,9 @@ while(1):
 
             if choix=="Choisir un nouvel automate":
                 break
+            if choix=="Tracer automate fichier":
+                trace_automate(automate,numero_automate)
+
 
 
 
